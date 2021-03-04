@@ -1,4 +1,4 @@
-package org.copters.lab1;
+package org.copters.lab.one;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
