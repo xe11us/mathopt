@@ -21,8 +21,11 @@ public abstract class AbstractMinimizer implements Minimizer {
 
     protected abstract double getMinX();
 
+    protected void reinitialize() {}
+
     @Override
     public final double minimize(UnimodalFunction function) {
+        reinitialize();
         while (hasNext()) {
             segment = next(function);
         }

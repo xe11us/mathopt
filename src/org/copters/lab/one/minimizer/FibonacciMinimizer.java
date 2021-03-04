@@ -54,4 +54,9 @@ public class FibonacciMinimizer extends AbstractMinimizer {
     protected double getMinX() {
         return (segment.getFrom() + segment.getTo()) / 2;
     }
+
+    @Override
+    protected void reinitialize() {
+        this.currentStep = 0;
+    }
 }
