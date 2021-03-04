@@ -6,7 +6,7 @@ import org.copters.lab.one.util.UnimodalFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FibonacciMinimizer extends AbstractMinimizer {
+public class FibonacciMinimizer extends AbstractMemorizingMinimizer {
     private final double initialLength;
     private final List<Double> fibonacci;
     private final int maxStep;
@@ -32,17 +32,21 @@ public class FibonacciMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected Segment next(UnimodalFunction function) {
-        double x1 = segment.getFrom() +
+    protected double getX1() {
+        return segment.getFrom() +
                 initialLength * fibonacci.get(maxStep - currentStep + 1) / fibonacci.get(maxStep + 2);
-        double x2 = segment.getFrom() +
-                initialLength * fibonacci.get(maxStep - currentStep + 2) / fibonacci.get(maxStep + 2);
+    }
 
+    @Override
+    protected double getX2() {
+        return segment.getFrom() +
+                initialLength * fibonacci.get(maxStep - currentStep + 2) / fibonacci.get(maxStep + 2);
+    }
+
+    @Override
+    protected Segment next(UnimodalFunction function) {
         ++currentStep;
-        if (function.applyAsDouble(x1) <= function.applyAsDouble(x2)) {
-            return new Segment(segment.getFrom(), x2);
-        }
-        return new Segment(x1, segment.getTo());
+        return super.next(function);
     }
 
     @Override
@@ -56,7 +60,8 @@ public class FibonacciMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected void reinitialize() {
-        this.currentStep = 0;
+    protected void reinitialize(UnimodalFunction function) {
+        super.reinitialize(function);
+        currentStep = 0;
     }
 }
