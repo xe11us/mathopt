@@ -43,13 +43,12 @@ public class ParabolicMinimizer extends AbstractMinimizer {
         } else {
             if (x < x2) {
                 x3 = x2;
-                x2 = x;
                 f3 = f2;
             } else {
                 x1 = x2;
                 f1 = f2;
-                x2 = x;
             }
+            x2 = x;
             f2 = f;
         }
 
