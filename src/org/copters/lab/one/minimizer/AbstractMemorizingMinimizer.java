@@ -4,8 +4,11 @@ import org.copters.lab.one.util.Segment;
 import org.copters.lab.one.util.UnimodalFunction;
 
 public abstract class AbstractMemorizingMinimizer extends AbstractMinimizer {
-    private double x1, x2;
-    private double f1, f2;
+    private double x1;
+    private double x2;
+
+    private double f1;
+    private double f2;
 
     protected AbstractMemorizingMinimizer(Segment segment, double epsilon) {
         super(segment, epsilon);
