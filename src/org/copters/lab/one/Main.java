@@ -1,8 +1,6 @@
 package org.copters.lab.one;
 
-import org.copters.lab.one.minimizer.DichotomyMinimizer;
-import org.copters.lab.one.minimizer.FibonacciMinimizer;
-import org.copters.lab.one.minimizer.Minimizer;
+import org.copters.lab.one.minimizer.*;
 import org.copters.lab.one.util.Segment;
 import org.copters.lab.one.util.UnimodalFunction;
 
@@ -24,5 +22,7 @@ public class Main {
     public static void main(String[] args) {
         run(new DichotomyMinimizer(SEGMENT, EPS));
         run(new FibonacciMinimizer(SEGMENT, EPS));
+        run(new GoldenRatioMinimizer(SEGMENT, EPS));
+        run(new ParabolicMinimizer(SEGMENT, EPS));
     }
 }
