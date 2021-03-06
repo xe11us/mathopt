@@ -10,7 +10,7 @@ public class ParabolicMinimizer extends AbstractMinimizer {
     private double x1;
     private double x2;
     private double x3;
-
+    
     private double f1;
     private double f2;
     private double f3;
@@ -21,7 +21,7 @@ public class ParabolicMinimizer extends AbstractMinimizer {
 
     @Override
     protected boolean hasNext() {
-        return (x3 - x1) > 2 * epsilon;
+        return (x3 - x1) > epsilon;
     }
 
     @Override
