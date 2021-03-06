@@ -24,5 +24,6 @@ public class Main {
         run(new FibonacciMinimizer(SEGMENT, EPS));
         run(new GoldenRatioMinimizer(SEGMENT, EPS));
         run(new ParabolicMinimizer(SEGMENT, EPS));
+        run(new BrentMinimizer(SEGMENT, EPS));
     }
 }
