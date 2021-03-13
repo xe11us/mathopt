@@ -62,6 +62,8 @@ public class ParabolicMinimizer extends AbstractMinimizer {
 
     @Override
     protected void reinitialize(UnimodalFunction function) {
+        super.reinitialize(function);
+
         x1 = segment.getFrom();
         x2 = (segment.getFrom() + segment.getTo()) / 2.;
         x3 = segment.getTo();

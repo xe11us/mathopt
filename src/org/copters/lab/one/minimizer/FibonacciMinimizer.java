@@ -6,16 +6,20 @@ import org.copters.lab.one.util.UnimodalFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FibonacciMinimizer extends AbstractMemorizingMinimizer {
-    private final double initialLength;
+public class FibonacciMinimizer extends AbstractMinimizer {
     private final List<Double> fibonacci;
     private final int maxStep;
 
     private int currentStep;
 
+    private double x1;
+    private double x2;
+
+    private double f1;
+    private double f2;
+
     public FibonacciMinimizer(Segment segment, double epsilon) {
         super(segment, epsilon);
-        this.initialLength = segment.length();
         this.fibonacci = new ArrayList<>(List.of(0., 1.));
         this.maxStep = initMaxStep();
         this.currentStep = 0;
@@ -23,7 +27,7 @@ public class FibonacciMinimizer extends AbstractMemorizingMinimizer {
 
     private int initMaxStep() {
         int step = -1;
-        while (initialLength >= epsilon * fibonacci.get(step + 2)) {
+        while (initialSegment.length() >= epsilon * fibonacci.get(step + 2)) {
             ++step;
             fibonacci.add(fibonacci.get(fibonacci.size() - 1) +
                             fibonacci.get(fibonacci.size() - 2));
@@ -32,26 +36,29 @@ public class FibonacciMinimizer extends AbstractMemorizingMinimizer {
     }
 
     @Override
-    protected double getX1() {
-        return segment.getFrom() +
-                initialLength * fibonacci.get(maxStep - currentStep + 1) / fibonacci.get(maxStep + 2);
-    }
-
-    @Override
-    protected double getX2() {
-        return segment.getFrom() +
-                initialLength * fibonacci.get(maxStep - currentStep + 2) / fibonacci.get(maxStep + 2);
+    protected boolean hasNext() {
+        return currentStep <= maxStep;
     }
 
     @Override
     protected Segment next(UnimodalFunction function) {
         ++currentStep;
-        return super.next(function);
-    }
-
-    @Override
-    protected boolean hasNext() {
-        return currentStep <= maxStep;
+        if (f1 <= f2) {
+            segment = new Segment(segment.getFrom(), x2);
+            x2 = x1;
+            f2 = f1;
+            x1 = segment.getFrom() + initialSegment.length()
+                    * fibonacci.get(maxStep - currentStep + 1) / fibonacci.get(maxStep + 2);
+            f1 = function.applyAsDouble(x1);
+        } else {
+            segment = new Segment(x1, segment.getTo());
+            x1 = x2;
+            f1 = f2;
+            x2 = segment.getFrom() + initialSegment.length()
+                    * fibonacci.get(maxStep - currentStep + 2) / fibonacci.get(maxStep + 2);
+            f2 = function.applyAsDouble(x2);
+        }
+        return segment;
     }
 
     @Override
@@ -62,6 +69,15 @@ public class FibonacciMinimizer extends AbstractMemorizingMinimizer {
     @Override
     protected void reinitialize(UnimodalFunction function) {
         super.reinitialize(function);
+
+        x1 = segment.getFrom() + initialSegment.length()
+                * fibonacci.get(maxStep - currentStep + 1) / fibonacci.get(maxStep + 2);
+        x2 = segment.getFrom() + initialSegment.length()
+                * fibonacci.get(maxStep - currentStep + 2) / fibonacci.get(maxStep + 2);
+
+        f1 = function.applyAsDouble(x1);
+        f2 = function.applyAsDouble(x2);
+
         currentStep = 0;
     }
 }
