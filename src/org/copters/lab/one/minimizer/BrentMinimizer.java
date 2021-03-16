@@ -28,43 +28,44 @@ public class BrentMinimizer extends AbstractMinimizer {
         super(segment, epsilon);
     }
 
-    private void update(UnimodalFunction function, double u) {
-        if (function.applyAsDouble(u) < fx) {
+    private void update(double u, double fu) {
+        if (fu < fx) {
             v = w;
             w = x;
             x = u;
             fv = fw;
             fw = fx;
-            fx = function.applyAsDouble(u);
+            fx = fu;
         }
     }
 
     private Segment getResult(UnimodalFunction function, double u) {
         double len = segment.length();
+        double fu = function.applyAsDouble(u);
 
         if (u < x) {
-            if (function.applyAsDouble(u) < fx) {
+            if (fu < fx) {
                 c = x;
-                fc = function.applyAsDouble(c);
+                fc = fx;
                 segment = new Segment(a, x);
             } else {
                 a = u;
-                fa = function.applyAsDouble(a);
+                fa = fu;
                 segment = new Segment(u, c);
             }
         } else {
-            if (fx < function.applyAsDouble(u)) {
+            if (fx < fu) {
                 c = u;
-                fc = function.applyAsDouble(c);
+                fc = fu;
                 segment = new Segment(a, u);
             } else {
                 a = x;
-                fa = function.applyAsDouble(a);
+                fa = fx;
                 segment = new Segment(x, c);
             }
         }
 
-        update(function, u);
+        update(u, fu);
         prePreviousStepLength = previousStepLength;
         previousStepLength = Math.abs(len - segment.length());
         return segment;
