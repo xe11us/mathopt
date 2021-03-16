@@ -28,20 +28,8 @@ public class BrentMinimizer extends AbstractMinimizer {
         super(segment, epsilon);
     }
 
-    private void update(double u, double fu) {
-        if (fu < fx) {
-            v = w;
-            w = x;
-            x = u;
-            fv = fw;
-            fw = fx;
-            fx = fu;
-        }
-    }
-
-    private Segment getResult(UnimodalFunction function, double u) {
+    private Segment getResult(double u, double fu) {
         double len = segment.length();
-        double fu = function.applyAsDouble(u);
 
         if (u < x) {
             if (fu < fx) {
@@ -65,7 +53,15 @@ public class BrentMinimizer extends AbstractMinimizer {
             }
         }
 
-        update(u, fu);
+        if (fu < fx) {
+            v = w;
+            w = x;
+            x = u;
+            fv = fw;
+            fw = fx;
+            fx = fu;
+        }
+
         prePreviousStepLength = previousStepLength;
         previousStepLength = Math.abs(len - segment.length());
         return segment;
@@ -82,7 +78,7 @@ public class BrentMinimizer extends AbstractMinimizer {
                 Segment result = parabolicMinimizer.next(function);
                 u = result.getFrom() == segment.getFrom() ? result.getTo() : result.getFrom();
                 if (abs(u - x) <= prePreviousStepLength) {
-                    return getResult(function, u);
+                    return getResult(u, function.applyAsDouble(u));
                 }
             }
         }
@@ -97,7 +93,7 @@ public class BrentMinimizer extends AbstractMinimizer {
         if (goldenRatioMinimizer.hasNext()) {
             Segment result = goldenRatioMinimizer.next(function);
             u = result.getFrom() == goldenRatioSegment.getFrom() ? result.getTo() : result.getFrom();
-            return getResult(function, u);
+            return getResult(u, function.applyAsDouble(u));
         }
 
         throw new RuntimeException("GoldenRatio doesn't have ");
