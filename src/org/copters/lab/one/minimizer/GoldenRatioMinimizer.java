@@ -16,6 +16,14 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
         super(segment, epsilon);
     }
 
+    public GoldenRatioMinimizer(Segment segment, double epsilon, double f1, double f2) {
+        super(segment, epsilon);
+        x1 = segment.getFrom();
+        x2 = segment.getTo();
+        this.f1 = f1;
+        this.f2 = f2;
+    }
+
     @Override
     protected boolean hasNext() {
         return segment.length() > epsilon;
@@ -36,6 +44,7 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
             x2 = segment.getFrom() + TAU * segment.length();
             f2 = function.applyAsDouble(x2);
         }
+        ++counter;
 
         return segment;
     }
@@ -54,5 +63,6 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
 
         f1 = function.applyAsDouble(x1);
         f2 = function.applyAsDouble(x2);
+        counter += 2;
     }
 }

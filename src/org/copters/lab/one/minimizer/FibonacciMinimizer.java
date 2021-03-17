@@ -50,6 +50,7 @@ public class FibonacciMinimizer extends AbstractMinimizer {
             x1 = segment.getFrom() + initialSegment.length()
                     * fibonacci.get(maxStep - currentStep + 1) / fibonacci.get(maxStep + 2);
             f1 = function.applyAsDouble(x1);
+            ++counter;
         } else {
             segment = new Segment(x1, segment.getTo());
             x1 = x2;
@@ -57,6 +58,7 @@ public class FibonacciMinimizer extends AbstractMinimizer {
             x2 = segment.getFrom() + initialSegment.length()
                     * fibonacci.get(maxStep - currentStep + 2) / fibonacci.get(maxStep + 2);
             f2 = function.applyAsDouble(x2);
+            ++counter;
         }
         return segment;
     }
@@ -77,6 +79,8 @@ public class FibonacciMinimizer extends AbstractMinimizer {
 
         f1 = function.applyAsDouble(x1);
         f2 = function.applyAsDouble(x2);
+
+        counter += 2;
 
         currentStep = 0;
     }

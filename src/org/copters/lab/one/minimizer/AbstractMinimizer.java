@@ -6,6 +6,9 @@ import org.copters.lab.one.util.UnimodalFunction;
 public abstract class AbstractMinimizer implements Minimizer {
     protected final Segment initialSegment;
     protected final double epsilon;
+    int counter = 0;
+
+    public int steps = 0;
 
     protected Segment segment;
 
@@ -28,8 +31,10 @@ public abstract class AbstractMinimizer implements Minimizer {
     public final double minimize(UnimodalFunction function) {
         reinitialize(function);
         while (hasNext()) {
+            ++steps;
             segment = next(function);
         }
+        System.out.println(counter + ") for " + steps + " steps");
         return getMinX();
     }
 

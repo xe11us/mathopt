@@ -27,7 +27,7 @@ public class DichotomyMinimizer extends AbstractMinimizer {
     protected Segment next(UnimodalFunction function) {
         double x1 = (segment.getFrom() + segment.getTo() - delta) / 2;
         double x2 = (segment.getFrom() + segment.getTo() + delta) / 2;
-
+        counter += 2;
         if (function.applyAsDouble(x1) <= function.applyAsDouble(x2)) {
             return new Segment(segment.getFrom(), x2);
         }

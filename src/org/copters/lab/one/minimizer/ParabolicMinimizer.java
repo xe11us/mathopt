@@ -21,7 +21,7 @@ public class ParabolicMinimizer extends AbstractMinimizer {
 
     @Override
     protected boolean hasNext() {
-        return (x3 - x1) > epsilon;
+        return segment.length() > epsilon;
     }
 
     @Override
@@ -31,6 +31,7 @@ public class ParabolicMinimizer extends AbstractMinimizer {
 
         double x = 0.5 * (x1 + x2 - a1 / a2);
         double f = function.applyAsDouble(x);
+        ++counter;
 
         if (f >= f2) {
             if (x < x2) {
@@ -71,10 +72,31 @@ public class ParabolicMinimizer extends AbstractMinimizer {
         f1 = function.applyAsDouble(x1);
         f2 = function.applyAsDouble(x2);
         f3 = function.applyAsDouble(x3);
+        counter = 3;
+
+        boolean hasErrors = false;
 
         while (!(f1 >= f2 && f2 <= f3)) {
             x2 = x1 + (x3 - x1) * RANDOM.nextDouble();
             f2 = function.applyAsDouble(x2);
+            ++counter;
+            if (counter > 100) {
+                hasErrors = true;
+                break;
+            }
+        }
+
+        if (hasErrors) {
+            if (f1 < f3) {
+                x3 = x2 = x1;
+                f3 = f2 = f1;
+                segment = new Segment(x1, x1);
+            } else {
+                x1 = x2 = x3;
+                f1 = f2 = f3;
+                segment = new Segment(x3, x3);
+            }
+            counter = 0;
         }
     }
 }
