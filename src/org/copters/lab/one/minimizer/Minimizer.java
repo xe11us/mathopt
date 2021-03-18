@@ -4,4 +4,6 @@ import org.copters.lab.one.util.UnimodalFunction;
 
 public interface Minimizer {
     double minimize(UnimodalFunction function);
+
+    String getRussianName();
 }

@@ -40,4 +40,9 @@ public class DichotomyMinimizer extends AbstractMinimizer {
     protected double getXMin() {
         return (segment.getFrom() + segment.getTo()) / 2;
     }
+
+    @Override
+    public String getRussianName() {
+        return "Метод дихотомии";
+    }
 }

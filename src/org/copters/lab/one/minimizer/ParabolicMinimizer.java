@@ -99,4 +99,9 @@ public class ParabolicMinimizer extends AbstractMinimizer {
             }
         }
     }
+
+    @Override
+    public String getRussianName() {
+        return "Метод парабол";
+    }
 }

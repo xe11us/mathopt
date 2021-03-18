@@ -120,4 +120,9 @@ public class BrentMinimizer extends AbstractMinimizer {
 
         length = prevLength = segment.length();
     }
+
+    @Override
+    public String getRussianName() {
+        return "Комбинированный метод Брента";
+    }
 }

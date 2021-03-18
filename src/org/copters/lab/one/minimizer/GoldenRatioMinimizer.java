@@ -54,4 +54,9 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
         f1 = function.applyAsDouble(x1);
         f2 = function.applyAsDouble(x2);
     }
+
+    @Override
+    public String getRussianName() {
+        return "Метод золотого сечения";
+    }
 }
