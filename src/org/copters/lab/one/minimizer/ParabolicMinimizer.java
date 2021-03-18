@@ -1,14 +1,17 @@
 package org.copters.lab.one.minimizer;
 
-import java.util.Random;
-
 import org.copters.lab.one.util.Parabola;
 import org.copters.lab.one.util.Segment;
 import org.copters.lab.one.util.UnimodalFunction;
 
+import java.util.Random;
+
 public class ParabolicMinimizer extends AbstractMinimizer {
     private static final Random RANDOM = new Random();
     private static final int MAX_TRIES = 100;
+
+    private double x;
+    private double prevX;
 
     private double x2;
     
@@ -22,14 +25,15 @@ public class ParabolicMinimizer extends AbstractMinimizer {
 
     @Override
     protected boolean hasNext() {
-        return segment.length() > epsilon;
+        return Math.abs(prevX - x) > epsilon;
     }
 
     @Override
     protected Segment next(UnimodalFunction function) {
         Parabola parabola = new Parabola(segment.getFrom(), x2, segment.getTo(), f1, f2, f3);
 
-        double x = parabola.getXMin();
+        prevX = x;
+        x = parabola.getXMin();
         double f = function.applyAsDouble(x);
 
         if (f >= f2) {
@@ -57,7 +61,7 @@ public class ParabolicMinimizer extends AbstractMinimizer {
 
     @Override
     protected double getXMin() {
-        return x2;
+        return x;
     }
 
     private boolean tryFindX2(UnimodalFunction function) {
@@ -98,6 +102,9 @@ public class ParabolicMinimizer extends AbstractMinimizer {
                 segment = new Segment(segment.getTo(), segment.getTo());
             }
         }
+
+        x = x2;
+        prevX = x + 2 * epsilon;
     }
 
     @Override

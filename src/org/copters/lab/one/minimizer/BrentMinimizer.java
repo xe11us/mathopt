@@ -33,7 +33,7 @@ public class BrentMinimizer extends AbstractMinimizer {
     @Override
     protected boolean hasNext() {
         double tolerance = epsilon * Math.abs(x) + epsilon / 10;
-        return Math.abs(x - (segment.getFrom() + segment.getTo()) / 2) + (segment.length()) / 2 > 2 * tolerance;
+        return Math.abs(x - (segment.getFrom() + segment.getTo()) / 2) + segment.length() / 2 > 2 * tolerance;
     }
 
     @Override

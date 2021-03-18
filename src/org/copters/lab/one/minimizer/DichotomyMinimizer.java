@@ -1,7 +1,7 @@
 package org.copters.lab.one.minimizer;
 
-import org.copters.lab.one.util.UnimodalFunction;
 import org.copters.lab.one.util.Segment;
+import org.copters.lab.one.util.UnimodalFunction;
 
 public class DichotomyMinimizer extends AbstractMinimizer {
     private final double delta;
