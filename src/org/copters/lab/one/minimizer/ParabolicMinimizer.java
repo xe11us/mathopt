@@ -1,15 +1,16 @@
 package org.copters.lab.one.minimizer;
 
 import java.util.Random;
+
+import org.copters.lab.one.util.Parabola;
 import org.copters.lab.one.util.Segment;
 import org.copters.lab.one.util.UnimodalFunction;
 
 public class ParabolicMinimizer extends AbstractMinimizer {
     private static final Random RANDOM = new Random();
+    private static final int MAX_TRIES = 100;
 
-    private double x1;
     private double x2;
-    private double x3;
     
     private double f1;
     private double f2;
@@ -26,77 +27,76 @@ public class ParabolicMinimizer extends AbstractMinimizer {
 
     @Override
     protected Segment next(UnimodalFunction function) {
-        double a1 = (f2 - f1) / (x2 - x1);
-        double a2 = ((f3 - f1) / (x3 - x1) - (f2 - f1) / (x2 - x1)) / (x3 - x2);
+        Parabola parabola = new Parabola(segment.getFrom(), x2, segment.getTo(), f1, f2, f3);
 
-        double x = 0.5 * (x1 + x2 - a1 / a2);
+        double x = parabola.getXMin();
         double f = function.applyAsDouble(x);
-        ++counter;
 
         if (f >= f2) {
             if (x < x2) {
-                x1 = x;
+                segment = new Segment(x, segment.getTo());
                 f1 = f;
             } else {
-                x3 = x;
+                segment = new Segment(segment.getFrom(), x);
                 f3 = f;
             }
         } else {
             if (x < x2) {
-                x3 = x2;
+                segment = new Segment(segment.getFrom(), x2);
                 f3 = f2;
             } else {
-                x1 = x2;
+                segment = new Segment(x2, segment.getTo());
                 f1 = f2;
             }
             x2 = x;
             f2 = f;
         }
 
-        return new Segment(x1, x3);
+        return segment;
     }
 
     @Override
-    protected double getMinX() {
+    protected double getXMin() {
         return x2;
+    }
+
+    private boolean tryFindX2(UnimodalFunction function) {
+        int tryNum = 0;
+
+        do {
+            x2 = segment.getFrom() + segment.length() * RANDOM.nextDouble();
+            f2 = function.applyAsDouble(x2);
+            ++tryNum;
+
+            if (tryNum > MAX_TRIES) {
+                return false;
+            }
+        } while (!(f1 >= f2 && f2 <= f3));
+
+        return true;
     }
 
     @Override
     protected void reinitialize(UnimodalFunction function) {
         super.reinitialize(function);
 
-        x1 = segment.getFrom();
-        x2 = (segment.getFrom() + segment.getTo()) / 2.;
-        x3 = segment.getTo();
+        f1 = function.applyAsDouble(segment.getFrom());
+        f3 = function.applyAsDouble(segment.getTo());
 
-        f1 = function.applyAsDouble(x1);
-        f2 = function.applyAsDouble(x2);
-        f3 = function.applyAsDouble(x3);
-        counter = 3;
+        boolean found = tryFindX2(function);
 
-        boolean hasErrors = false;
+        if (!found) {
+            System.err.println("Warning! The given result might be wrong.");
 
-        while (!(f1 >= f2 && f2 <= f3)) {
-            x2 = x1 + (x3 - x1) * RANDOM.nextDouble();
-            f2 = function.applyAsDouble(x2);
-            ++counter;
-            if (counter > 100) {
-                hasErrors = true;
-                break;
-            }
-        }
-
-        if (hasErrors) {
             if (f1 < f3) {
-                x3 = x2 = x1;
+                x2 = segment.getFrom();
                 f3 = f2 = f1;
-                segment = new Segment(x1, x1);
+                segment = new Segment(segment.getFrom(), segment.getFrom());
             } else {
-                x1 = x2 = x3;
+                x2 = segment.getTo();
                 f1 = f2 = f3;
-                segment = new Segment(x3, x3);
+                segment = new Segment(segment.getTo(), segment.getTo());
             }
-            counter = 0;
         }
     }
 }

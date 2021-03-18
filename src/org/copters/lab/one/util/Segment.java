@@ -20,6 +20,10 @@ public class Segment {
         return to;
     }
 
+    public boolean contains(double x) {
+        return from <= x && x <= to;
+    }
+
     public double length() {
         return to - from;
     }
