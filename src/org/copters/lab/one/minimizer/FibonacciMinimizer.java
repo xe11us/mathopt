@@ -20,13 +20,12 @@ public class FibonacciMinimizer extends AbstractMinimizer {
 
     public FibonacciMinimizer(Segment segment, double epsilon) {
         super(segment, epsilon);
-        this.fibonacci = new ArrayList<>(List.of(0., 1.));
+        this.fibonacci = new ArrayList<>(List.of(1., 1., 2.));
         this.maxStep = initMaxStep();
-        this.currentStep = 0;
     }
 
     private int initMaxStep() {
-        int step = -1;
+        int step = 0;
         while (initialSegment.length() >= epsilon * fibonacci.get(step + 2)) {
             ++step;
             fibonacci.add(fibonacci.get(fibonacci.size() - 1) +
@@ -62,7 +61,7 @@ public class FibonacciMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected double getMinX() {
+    protected double getXMin() {
         return (segment.getFrom() + segment.getTo()) / 2;
     }
 
@@ -70,6 +69,7 @@ public class FibonacciMinimizer extends AbstractMinimizer {
     protected void reinitialize(UnimodalFunction function) {
         super.reinitialize(function);
 
+        currentStep = 0;
         x1 = segment.getFrom() + initialSegment.length()
                 * fibonacci.get(maxStep - currentStep + 1) / fibonacci.get(maxStep + 2);
         x2 = segment.getFrom() + initialSegment.length()
@@ -77,7 +77,5 @@ public class FibonacciMinimizer extends AbstractMinimizer {
 
         f1 = function.applyAsDouble(x1);
         f2 = function.applyAsDouble(x2);
-
-        currentStep = 0;
     }
 }

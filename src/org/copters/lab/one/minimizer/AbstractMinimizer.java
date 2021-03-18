@@ -22,7 +22,7 @@ public abstract class AbstractMinimizer implements Minimizer {
 
     protected abstract boolean hasNext();
 
-    protected abstract double getMinX();
+    protected abstract double getXMin();
 
     @Override
     public final double minimize(UnimodalFunction function) {
@@ -30,7 +30,7 @@ public abstract class AbstractMinimizer implements Minimizer {
         while (hasNext()) {
             segment = next(function);
         }
-        return getMinX();
+        return getXMin();
     }
 
     protected void reinitialize(UnimodalFunction function) {

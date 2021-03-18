@@ -4,7 +4,7 @@ import org.copters.lab.one.util.Segment;
 import org.copters.lab.one.util.UnimodalFunction;
 
 public class GoldenRatioMinimizer extends AbstractMinimizer {
-    private static final double TAU = (Math.sqrt(5) - 1.) / 2;
+    public static final double TAU = (Math.sqrt(5) - 1.) / 2;
 
     private double x1;
     private double x2;
@@ -18,7 +18,7 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
 
     @Override
     protected boolean hasNext() {
-        return segment.length() > epsilon;
+        return segment.length() > 2 * epsilon;
     }
 
     @Override
@@ -36,12 +36,11 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
             x2 = segment.getFrom() + TAU * segment.length();
             f2 = function.applyAsDouble(x2);
         }
-
         return segment;
     }
 
     @Override
-    protected double getMinX() {
+    protected double getXMin() {
         return (segment.getFrom() + segment.getTo()) / 2;
     }
 

@@ -29,13 +29,15 @@ public class DichotomyMinimizer extends AbstractMinimizer {
         double x2 = (segment.getFrom() + segment.getTo() + delta) / 2;
 
         if (function.applyAsDouble(x1) <= function.applyAsDouble(x2)) {
-            return new Segment(segment.getFrom(), x2);
+            segment = new Segment(segment.getFrom(), x2);
+        } else {
+            segment = new Segment(x1, segment.getTo());
         }
-        return new Segment(x1, segment.getTo());
+        return segment;
     }
 
     @Override
-    protected double getMinX() {
+    protected double getXMin() {
         return (segment.getFrom() + segment.getTo()) / 2;
     }
 }
