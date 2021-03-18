@@ -22,24 +22,26 @@ public class Main {
             BrentMinimizer.class
     );
 
-    private static void run(Class<? extends Minimizer> clazz) throws Exception {
-        var constructor = clazz.getConstructor(Segment.class, double.class);
-        Minimizer minimizer = constructor.newInstance(SEGMENT, EPS);
+    private static void run(Class<? extends Minimizer> clazz) {
+        try {
+            var constructor = clazz.getConstructor(Segment.class, double.class);
+            Minimizer minimizer = constructor.newInstance(SEGMENT, EPS);
 
-        double minX = minimizer.minimize(FUNCTION);
-        System.out.printf("%s: f(%f) = %f\n",
-                minimizer.getClass().getSimpleName(),
-                minX,
-                FUNCTION.applyAsDouble(minX));
-    }
-
-    private static void runAll() throws Exception {
-        for (Class<? extends Minimizer> clazz : MINIMIZERS) {
-            run(clazz);
+            double minX = minimizer.minimize(FUNCTION);
+            System.out.printf("%s: f(%f) = %f\n",
+                    minimizer.getClass().getSimpleName(),
+                    minX,
+                    FUNCTION.applyAsDouble(minX));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    private static void runAll() {
+        MINIMIZERS.forEach(Main::run);
+    }
+
+    public static void main(String[] args) {
         runAll();
     }
 }
