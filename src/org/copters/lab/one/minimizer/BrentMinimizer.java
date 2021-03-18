@@ -15,8 +15,8 @@ public class BrentMinimizer extends AbstractMinimizer {
     private double fw;
     private double fx;
 
-    private double d;
-    private double e;
+    private double length;
+    private double prevLength;
 
     public BrentMinimizer(Segment segment, double epsilon) {
         super(segment, epsilon);
@@ -32,47 +32,46 @@ public class BrentMinimizer extends AbstractMinimizer {
 
     @Override
     protected boolean hasNext() {
-        double tol = epsilon * Math.abs(x) + epsilon / 10;
-        return Math.abs(x - (segment.getFrom() + segment.getTo()) / 2) + (segment.length()) / 2 > 2 * tol;
+        double tolerance = epsilon * Math.abs(x) + epsilon / 10;
+        return Math.abs(x - (segment.getFrom() + segment.getTo()) / 2) + (segment.length()) / 2 > 2 * tolerance;
     }
 
     @Override
     protected Segment next(UnimodalFunction function) {
-        double g = e;
-        e = d;
-
         boolean parabolaAccepted = false;
-        double tol = epsilon * Math.abs(x) + epsilon / 10;
+        double tolerance = epsilon * Math.abs(x) + epsilon / 10;
         double u = x;
 
         if (notEqual(x, w, v) && notEqual(fx, fw, fv)) {
             Parabola parabola = new Parabola(x, w, v, fx, fw, fv);
             u = parabola.getXMin();
 
-            if (segment.contains(u) && 2 * Math.abs(u - x) < g) {
+            if (segment.contains(u) && 2 * Math.abs(u - x) < prevLength) {
                 parabolaAccepted = true;
 
-                if (u - segment.getFrom() < 2 * tol || segment.getTo() - u < 2 * tol) {
-                    u = x - Math.signum(x - (segment.getFrom() + segment.getTo()) / 2) * tol;
+                if (u - segment.getFrom() < 2 * tolerance || segment.getTo() - u < 2 * tolerance) {
+                    u = x - Math.signum(x - (segment.getFrom() + segment.getTo()) / 2) * tolerance;
                 }
             }
         }
 
+        prevLength = length;
+
         if (!parabolaAccepted) {
             if (2 * x < segment.getFrom() + segment.getTo()) {
                 u = x + K * (segment.getTo() - x);
-                e = segment.getTo() - x;
+                prevLength = segment.getTo() - x;
             } else {
                 u = x - K * (x - segment.getFrom());
-                e = x - segment.getFrom();
+                prevLength = x - segment.getFrom();
             }
         }
 
-        if (Math.abs(u - x) < tol) {
-            u = x + Math.signum(u - x) * tol;
+        if (Math.abs(u - x) < tolerance) {
+            u = x + Math.signum(u - x) * tolerance;
         }
 
-        d = Math.abs(u - x);
+        length = Math.abs(u - x);
         double fu = function.applyAsDouble(u);
 
         if (fu <= fx) {
@@ -119,6 +118,6 @@ public class BrentMinimizer extends AbstractMinimizer {
         x = w = v = segment.getFrom() + K * segment.length();
         fx = fw = fv = function.applyAsDouble(x);
 
-        d = e = segment.length();
+        length = prevLength = segment.length();
     }
 }
