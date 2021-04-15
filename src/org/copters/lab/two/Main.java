@@ -17,7 +17,45 @@ import java.util.List;
 public class Main {
     private static final double EPSILON = 1e-5;
 
-    private static void run(final GradientMinimizer minimizer, final QuadraticFunction function, final double alpha) {
+    private static final List<TestCase> TEST_CASES = List.of(
+            new TestCase(
+                    new QuadraticFunction(
+                            Matrix.of(
+                                    List.of(64., 126.),
+                                    List.of(0., 64.)),
+                            Vector.of(-10, 30),
+                            13
+                    ),
+                    2,
+                    254
+            ),
+
+            new TestCase(
+                    new QuadraticFunction(
+                            Matrix.of(
+                                    List.of(1., 2.),
+                                    List.of(0., 3.)),
+                            Vector.of(4, 5),
+                            6
+                    ),
+                    -2 * Math.sqrt(2) + 4,
+                    2 * Math.sqrt(2) + 4
+            ),
+
+            new TestCase(
+                    new QuadraticFunction(
+                            Matrix.of(
+                                    List.of(1., 0.),
+                                    List.of(0., 1.)),
+                            Vector.of(1, -1),
+                            228
+                    ),
+                    2,
+                    2
+            )
+    );
+
+    private static void run(final GradientMinimizer minimizer, final TestCase testCase) {
         String fullname = minimizer.getRussianName();
         if (minimizer instanceof SteepestDescentMinimizer) {
             final SteepestDescentMinimizer steepestMinimizer = (SteepestDescentMinimizer) minimizer;
@@ -25,7 +63,8 @@ public class Main {
         }
         System.out.println(fullname + ": ");
         try {
-            final Tuple<Vector, Integer> result = minimizer.minimize(function, alpha);
+            final Tuple<Vector, Integer> result = minimizer.minimize(
+                    testCase.getFunction(), testCase.getAlpha());
             System.out.println("\tКоличество итераций: " + result.getSecond());
             System.out.println("\tРезультат: " + result.getFirst());
         } catch (final LimitExceededException e) {
@@ -35,31 +74,49 @@ public class Main {
     }
 
     public static void main(final String[] args) {
-        final QuadraticFunction function = new QuadraticFunction(
-                Matrix.of(
-                        List.of(64., 126.),
-                        List.of(0., 64.)),
-                Vector.of(-10, 30),
-                13
-        );
-        final double l = 2;
-        final double L = 254;
-
-        final Segment segment = new Segment(0, 2. / (l + L));
-        final List<Minimizer> singleVariableMinimizers = List.of(
-                new DichotomyMinimizer(segment, EPSILON),
-                new GoldenRatioMinimizer(segment, EPSILON),
-                new FibonacciMinimizer(segment, EPSILON),
-                new ParabolicMinimizer(segment, EPSILON),
-                new BrentMinimizer(segment, EPSILON)
-        );
-
         final List<GradientMinimizer> minimizers = List.of(
                 new GradientDescentMinimizer(EPSILON),
-                new SteepestDescentMinimizer(EPSILON, singleVariableMinimizers.get(4)),
                 new ConjugateGradientMinimizer(EPSILON)
         );
 
-        minimizers.forEach(minimizer -> run(minimizer, function, 2. / L));
+        TEST_CASES.forEach(test -> {
+            final Segment segment = test.getSegment();
+            final List<Minimizer> singleVariableMinimizers = List.of(
+                    new DichotomyMinimizer(segment, EPSILON),
+                    new GoldenRatioMinimizer(segment, EPSILON),
+                    new FibonacciMinimizer(segment, EPSILON),
+                    new ParabolicMinimizer(segment, EPSILON),
+                    new BrentMinimizer(segment, EPSILON)
+            );
+
+            minimizers.forEach(minimizer -> run(minimizer, test));
+            singleVariableMinimizers.stream()
+                    .map(single -> new SteepestDescentMinimizer(EPSILON, single))
+                    .forEach(minimizer -> run(minimizer, test));
+        });
+    }
+
+    private static class TestCase {
+        private final QuadraticFunction function;
+        private final double minEigenvalue;
+        private final double maxEigenvalue;
+
+        public TestCase(final QuadraticFunction function, final double minEigenvalue, final double maxEigenvalue) {
+            this.function = function;
+            this.minEigenvalue = minEigenvalue;
+            this.maxEigenvalue = maxEigenvalue;
+        }
+
+        public QuadraticFunction getFunction() {
+            return function;
+        }
+
+        public double getAlpha() {
+            return 2. / maxEigenvalue;
+        }
+
+        public Segment getSegment() {
+            return new Segment(0, 2. / (minEigenvalue + maxEigenvalue));
+        }
     }
 }
