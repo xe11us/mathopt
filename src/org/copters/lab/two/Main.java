@@ -15,9 +15,9 @@ import javax.naming.LimitExceededException;
 import java.util.List;
 
 public class Main {
-    private static final double EPSILON = 1e-8;
+    private static final double EPSILON = 1e-5;
 
-    private static void run(final GradientMinimizer minimizer, final QuadraticFunction function) {
+    private static void run(final GradientMinimizer minimizer, final QuadraticFunction function, final double alpha) {
         String fullname = minimizer.getRussianName();
         if (minimizer instanceof SteepestDescentMinimizer) {
             final SteepestDescentMinimizer steepestMinimizer = (SteepestDescentMinimizer) minimizer;
@@ -25,7 +25,7 @@ public class Main {
         }
         System.out.println(fullname + ": ");
         try {
-            final Tuple<Vector, Integer> result = minimizer.minimize(function);
+            final Tuple<Vector, Integer> result = minimizer.minimize(function, alpha);
             System.out.println("\tКоличество итераций: " + result.getSecond());
             System.out.println("\tРезультат: " + result.getFirst());
         } catch (final LimitExceededException e) {
@@ -45,7 +45,7 @@ public class Main {
         final double l = 2;
         final double L = 254;
 
-        final Segment segment = new Segment(0, 2. / L);
+        final Segment segment = new Segment(0, 2. / (l + L));
         final List<Minimizer> singleVariableMinimizers = List.of(
                 new DichotomyMinimizer(segment, EPSILON),
                 new GoldenRatioMinimizer(segment, EPSILON),
@@ -55,11 +55,11 @@ public class Main {
         );
 
         final List<GradientMinimizer> minimizers = List.of(
-//                new GradientDescentMinimizer(EPSILON),
-                new SteepestDescentMinimizer(EPSILON, singleVariableMinimizers.get(2)),
+                new GradientDescentMinimizer(EPSILON),
+                new SteepestDescentMinimizer(EPSILON, singleVariableMinimizers.get(4)),
                 new ConjugateGradientMinimizer(EPSILON)
         );
 
-        minimizers.forEach(minimizer -> run(minimizer, function));
+        minimizers.forEach(minimizer -> run(minimizer, function, 2. / L));
     }
 }

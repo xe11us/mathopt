@@ -5,11 +5,11 @@ import org.copters.lab.two.util.Tuple;
 import org.copters.lab.two.util.Vector;
 
 import javax.naming.LimitExceededException;
-import java.util.Optional;
 
 public abstract class AbstractGradientMinimizer implements GradientMinimizer {
     protected final double epsilon;
 
+    protected double alpha;
     protected Vector previousDirection;
     protected Vector nextGradient;
 
@@ -27,13 +27,15 @@ public abstract class AbstractGradientMinimizer implements GradientMinimizer {
     }
 
     @Override
-    public final Tuple<Vector, Integer> minimize(final QuadraticFunction function) throws LimitExceededException {
+    public final Tuple<Vector, Integer> minimize(final QuadraticFunction function, final double alpha)
+            throws LimitExceededException {
         final Vector zeros = Vector.ofZeros(function.getDimension());
         final int upperBound = 1_000 * ((int) -Math.log10(epsilon) / 2);
 
         Tuple<Vector, Double> x = Tuple.of(zeros, function.applyAsDouble(zeros));
         Vector gradient = function.getGradient(zeros);
-        previousDirection = zeros;
+        this.previousDirection = zeros;
+        this.alpha = alpha;
         int iteration = 0;
 
         for (; hasNext(gradient); ++iteration) {
