@@ -34,4 +34,8 @@ public class QuadraticFunction implements ToDoubleFunction<Vector> {
     public Vector getGradient(final Vector x) {
         return a.multiply(x).add(b);
     }
+
+    public Matrix getA() {
+        return a;
+    }
 }

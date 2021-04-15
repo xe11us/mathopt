@@ -7,20 +7,28 @@ import org.copters.lab.two.minimizer.GradientMinimizer;
 import org.copters.lab.two.minimizer.SteepestDescentMinimizer;
 import org.copters.lab.two.util.Matrix;
 import org.copters.lab.two.util.QuadraticFunction;
+import org.copters.lab.two.util.Tuple;
 import org.copters.lab.two.util.Vector;
 
 import javax.naming.LimitExceededException;
 import java.util.List;
 
 public class Main {
-    private static final double EPSILON = 1e-8;
+    private static final double EPSILON = 1e-5;
 
     private static void run(final GradientMinimizer minimizer, final QuadraticFunction function) {
-        System.out.print(minimizer.getRussianName() + ": ");
+        String fullname = minimizer.getRussianName();
+        if (minimizer instanceof SteepestDescentMinimizer) {
+            final SteepestDescentMinimizer steepestMinimizer = (SteepestDescentMinimizer) minimizer;
+            fullname += " (" + steepestMinimizer.getSingleMinimizer().getRussianName() + ")";
+        }
+        System.out.println(fullname + ": ");
         try {
-            System.out.println(minimizer.minimize(function));
+            final Tuple<Vector, Integer> result = minimizer.minimize(function);
+            System.out.println("\tКоличество итераций: " + result.getSecond());
+            System.out.println("\tРезультат: " + result.getFirst());
         } catch (final LimitExceededException e) {
-            System.out.println("Превышено максимальное количество итераций");
+            System.out.println("\tПревышено максимальное количество итераций");
             e.printStackTrace();
         }
     }
@@ -47,7 +55,7 @@ public class Main {
 
         final List<GradientMinimizer> minimizers = List.of(
 //                new GradientDescentMinimizer(EPSILON),
-                new SteepestDescentMinimizer(EPSILON, singleVariableMinimizers.get(1))
+                new SteepestDescentMinimizer(EPSILON, singleVariableMinimizers.get(4))
         );
 
         minimizers.forEach(minimizer -> run(minimizer, function));

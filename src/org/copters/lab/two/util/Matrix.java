@@ -8,15 +8,11 @@ import java.util.stream.Stream;
 public class Matrix {
     private final List<Vector> rows;
 
-    public Matrix(final List<Vector> rows) {
-        if (rows.size() == 0) {
-            throw new IllegalArgumentException("Sosi pisu"); // TODO maybe change message
-        }
-
+    protected Matrix(final List<Vector> rows) {
         final int dimension = rows.get(0).getDimension();
         final Stream<Vector> stream = rows.stream();
         if (stream.anyMatch(row -> row.getDimension() != dimension)) {
-            throw new IllegalArgumentException("Idi nahui"); // TODO maybe change message
+            throw new IllegalArgumentException("Cannot create matrix with different row sizes");
         }
 
         this.rows = rows;

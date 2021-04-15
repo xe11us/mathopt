@@ -23,6 +23,10 @@ public class SteepestDescentMinimizer extends AbstractGradientMinimizer {
         return Tuple.of(v, function.applyAsDouble(v));
     }
 
+    public Minimizer getSingleMinimizer() {
+        return singleMinimizer;
+    }
+
     @Override
     public String getRussianName() {
         return "Метод наискорейшего спуска";

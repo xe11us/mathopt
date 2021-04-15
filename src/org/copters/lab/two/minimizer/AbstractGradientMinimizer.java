@@ -23,15 +23,16 @@ public abstract class AbstractGradientMinimizer implements GradientMinimizer {
     }
 
     @Override
-    public final Vector minimize(final QuadraticFunction function) throws LimitExceededException {
+    public final Tuple<Vector, Integer> minimize(final QuadraticFunction function) throws LimitExceededException {
         final Vector zeros = Vector.ofZeros(function.getDimension());
+        final int upperBound = 1_000 * ((int) -Math.log10(epsilon) / 2);
 
         Tuple<Vector, Double> x = Tuple.of(zeros, function.applyAsDouble(zeros));
         Vector gradient = function.getGradient(zeros);
+        int iteration = 0;
 
-        final int upperBound = 1_000 * ((int) -Math.log10(epsilon) / 2);
-        for (int count = 0; hasNext(gradient); ++count) {
-            if (count >= upperBound) {
+        for (; hasNext(gradient); ++iteration) {
+            if (iteration >= upperBound) {
                 throw new LimitExceededException(
                         String.format("Number of iterations exceeded %d", upperBound));
             }
@@ -39,6 +40,6 @@ public abstract class AbstractGradientMinimizer implements GradientMinimizer {
             x = next(x, gradient, function);
             gradient = function.getGradient(x.getFirst());
         }
-        return x.getFirst();
+        return Tuple.of(x.getFirst(), iteration);
     }
 }

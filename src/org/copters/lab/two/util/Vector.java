@@ -49,10 +49,14 @@ public class Vector {
         return arguments.size();
     }
 
-    public double length() {
-        return Math.sqrt(arguments.stream()
+    public double sqrLength() {
+        return arguments.stream()
                 .mapToDouble(arg -> arg * arg)
-                .sum());
+                .sum();
+    }
+
+    public double length() {
+        return Math.sqrt(sqrLength());
     }
 
     public double dot(final Vector vector) {
