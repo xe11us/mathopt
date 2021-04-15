@@ -89,9 +89,9 @@ public class BrentMinimizer extends AbstractMinimizer {
             fx = fu;
         } else {
             if (u > x) {
-                segment = new Segment(segment.getFrom(), x);
+                segment = new Segment(segment.getFrom(), u);
             } else {
-                segment = new Segment(x, segment.getTo());
+                segment = new Segment(u, segment.getTo());
             }
 
             if (fu < fw || equal(w, x)) {
