@@ -2,6 +2,7 @@ package org.copters.lab.two;
 
 import org.copters.lab.one.minimizer.*;
 import org.copters.lab.one.util.Segment;
+import org.copters.lab.two.minimizer.ConjugateGradientMinimizer;
 import org.copters.lab.two.minimizer.GradientDescentMinimizer;
 import org.copters.lab.two.minimizer.GradientMinimizer;
 import org.copters.lab.two.minimizer.SteepestDescentMinimizer;
@@ -14,7 +15,7 @@ import javax.naming.LimitExceededException;
 import java.util.List;
 
 public class Main {
-    private static final double EPSILON = 1e-5;
+    private static final double EPSILON = 1e-8;
 
     private static void run(final GradientMinimizer minimizer, final QuadraticFunction function) {
         String fullname = minimizer.getRussianName();
@@ -55,7 +56,8 @@ public class Main {
 
         final List<GradientMinimizer> minimizers = List.of(
 //                new GradientDescentMinimizer(EPSILON),
-                new SteepestDescentMinimizer(EPSILON, singleVariableMinimizers.get(4))
+                new SteepestDescentMinimizer(EPSILON, singleVariableMinimizers.get(2)),
+                new ConjugateGradientMinimizer(EPSILON)
         );
 
         minimizers.forEach(minimizer -> run(minimizer, function));

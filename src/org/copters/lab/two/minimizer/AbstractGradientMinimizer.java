@@ -5,9 +5,13 @@ import org.copters.lab.two.util.Tuple;
 import org.copters.lab.two.util.Vector;
 
 import javax.naming.LimitExceededException;
+import java.util.Optional;
 
 public abstract class AbstractGradientMinimizer implements GradientMinimizer {
     protected final double epsilon;
+
+    protected Vector previousDirection;
+    protected Vector nextGradient;
 
     protected AbstractGradientMinimizer(final double epsilon) {
         if (epsilon <= 0) {
@@ -29,6 +33,7 @@ public abstract class AbstractGradientMinimizer implements GradientMinimizer {
 
         Tuple<Vector, Double> x = Tuple.of(zeros, function.applyAsDouble(zeros));
         Vector gradient = function.getGradient(zeros);
+        previousDirection = zeros;
         int iteration = 0;
 
         for (; hasNext(gradient); ++iteration) {
@@ -37,8 +42,12 @@ public abstract class AbstractGradientMinimizer implements GradientMinimizer {
                         String.format("Number of iterations exceeded %d", upperBound));
             }
 
+            nextGradient = null;
             x = next(x, gradient, function);
-            gradient = function.getGradient(x.getFirst());
+            gradient = nextGradient;
+            if (gradient == null) {
+                gradient = function.getGradient(x.getFirst());
+            }
         }
         return Tuple.of(x.getFirst(), iteration);
     }
