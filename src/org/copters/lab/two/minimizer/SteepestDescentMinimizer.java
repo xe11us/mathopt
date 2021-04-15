@@ -8,7 +8,7 @@ import org.copters.lab.two.util.Vector;
 public class SteepestDescentMinimizer extends AbstractGradientMinimizer {
     private final Minimizer singleMinimizer;
 
-    protected SteepestDescentMinimizer(final double epsilon, final Minimizer singleMinimizer) {
+    public SteepestDescentMinimizer(final double epsilon, final Minimizer singleMinimizer) {
         super(epsilon);
         this.singleMinimizer = singleMinimizer;
     }
@@ -19,8 +19,8 @@ public class SteepestDescentMinimizer extends AbstractGradientMinimizer {
                                          final QuadraticFunction function) {
         final double alpha = singleMinimizer.minimize(a ->
                 function.applyAsDouble(x.getFirst().subtract(gradient.multiply(a))));
-        final Vector tmp = x.getFirst().add(gradient.multiply(-alpha));
-        return Tuple.of(tmp, function.applyAsDouble(tmp));
+        final Vector v = x.getFirst().subtract(gradient.multiply(alpha));
+        return Tuple.of(v, function.applyAsDouble(v));
     }
 
     @Override

@@ -22,12 +22,6 @@ public class Vector {
         return new Vector(Collections.nCopies(n, 0.));
     }
 
-    public Vector negate() {
-        return new Vector(arguments.stream()
-                .map(arg -> -arg)
-                .collect(Collectors.toList()));
-    }
-
     public Vector multiply(final double scale) {
         return new Vector(arguments.stream()
                 .map(arg ->  arg * scale)
@@ -44,7 +38,7 @@ public class Vector {
     }
 
     public Vector subtract(final Vector vector) {
-        return add(vector.negate());
+        return add(vector.multiply(-1));
     }
 
     public Double get(final int index) {
@@ -57,7 +51,7 @@ public class Vector {
 
     public double length() {
         return Math.sqrt(arguments.stream()
-                .mapToDouble(arg -> arg)
+                .mapToDouble(arg -> arg * arg)
                 .sum());
     }
 
@@ -68,5 +62,10 @@ public class Vector {
         return IntStream.range(0, arguments.size())
                 .mapToDouble(ind -> get(ind) * vector.get(ind))
                 .sum();
+    }
+
+    @Override
+    public String toString() {
+        return arguments.toString();
     }
 }

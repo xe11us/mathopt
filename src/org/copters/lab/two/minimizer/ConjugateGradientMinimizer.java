@@ -6,7 +6,7 @@ import org.copters.lab.two.util.Vector;
 
 public class ConjugateGradientMinimizer extends AbstractGradientMinimizer {
 
-    protected ConjugateGradientMinimizer(final double epsilon) {
+    public ConjugateGradientMinimizer(final double epsilon) {
         super(epsilon);
     }
 

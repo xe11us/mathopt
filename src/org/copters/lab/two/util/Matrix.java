@@ -1,9 +1,39 @@
 package org.copters.lab.two.util;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Matrix {
+    private final List<Vector> rows;
+
+    public Matrix(final List<Vector> rows) {
+        if (rows.size() == 0) {
+            throw new IllegalArgumentException("Sosi pisu"); // TODO maybe change message
+        }
+
+        final int dimension = rows.get(0).getDimension();
+        final Stream<Vector> stream = rows.stream();
+        if (stream.anyMatch(row -> row.getDimension() != dimension)) {
+            throw new IllegalArgumentException("Idi nahui"); // TODO maybe change message
+        }
+
+        this.rows = rows;
+    }
+
+    @SafeVarargs
+    public static Matrix of(final List<Double>... rows) {
+        return new Matrix(Arrays.stream(rows)
+                .map(Vector::new)
+                .collect(Collectors.toList()));
+    }
+
+    public static Matrix of(final double[]... rows) {
+        return new Matrix(Arrays.stream(rows)
+                .map(Vector::of)
+                .collect(Collectors.toList()));
+    }
 
     public Vector multiply(final Vector vector) {
         if (vector.getDimension() != getDimensions().getSecond()) {
@@ -15,14 +45,14 @@ public class Matrix {
     }
 
     public List<Vector> rows() {
-        return null;
+        return rows;
     }
 
-    public List<Vector> columns() {
-        return null;
+    public double get(final int i, final int j) {
+        return rows.get(i).get(j);
     }
 
     public Tuple<Integer, Integer> getDimensions() {
-        return Tuple.of(0, 0);
+        return Tuple.of(rows.size(), rows.get(0).getDimension());
     }
 }

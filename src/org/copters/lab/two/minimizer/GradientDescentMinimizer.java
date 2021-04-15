@@ -5,8 +5,9 @@ import org.copters.lab.two.util.Tuple;
 import org.copters.lab.two.util.Vector;
 
 public class GradientDescentMinimizer extends AbstractGradientMinimizer {
+    private static final double INITIAL_ALPHA = 1.;
 
-    protected GradientDescentMinimizer(final double epsilon) {
+    public GradientDescentMinimizer(final double epsilon) {
         super(epsilon);
     }
 
@@ -15,9 +16,9 @@ public class GradientDescentMinimizer extends AbstractGradientMinimizer {
                                          final Vector gradient,
                                          final QuadraticFunction function) {
         final double length = gradient.length();
-        for (double alpha = 1.; alpha > 0; alpha /= 2) {
-            final Vector tmp = x.getFirst().subtract(gradient.multiply(alpha / length));
-            final Tuple<Vector, Double> y = Tuple.of(tmp, function.applyAsDouble(tmp));
+        for (double alpha = INITIAL_ALPHA; alpha > 0; alpha /= 2) {
+            final Vector v = x.getFirst().subtract(gradient.multiply(alpha / length));
+            final Tuple<Vector, Double> y = Tuple.of(v, function.applyAsDouble(v));
 
             if (y.getSecond() < x.getSecond()) {
                 return y;
