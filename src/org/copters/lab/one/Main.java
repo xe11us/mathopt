@@ -22,17 +22,17 @@ public class Main {
             BrentMinimizer.class
     );
 
-    private static void run(Class<? extends Minimizer> clazz) {
+    private static void run(final Class<? extends Minimizer> clazz) {
         try {
-            var constructor = clazz.getConstructor(Segment.class, double.class);
-            Minimizer minimizer = constructor.newInstance(SEGMENT, EPS);
+            final var constructor = clazz.getConstructor(Segment.class, double.class);
+            final Minimizer minimizer = constructor.newInstance(SEGMENT, EPS);
 
-            double minX = minimizer.minimize(FUNCTION);
+            final double minX = minimizer.minimize(FUNCTION);
             System.out.printf("%s: f(%f) = %f\n",
                     minimizer.getRussianName(),
                     minX,
                     FUNCTION.applyAsDouble(minX));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
@@ -41,7 +41,7 @@ public class Main {
         MINIMIZERS.forEach(Main::run);
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         runAll();
     }
 }

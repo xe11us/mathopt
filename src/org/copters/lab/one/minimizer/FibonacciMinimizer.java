@@ -18,7 +18,7 @@ public class FibonacciMinimizer extends AbstractMinimizer {
     private double f1;
     private double f2;
 
-    public FibonacciMinimizer(Segment segment, double epsilon) {
+    public FibonacciMinimizer(final Segment segment, final double epsilon) {
         super(segment, epsilon);
         this.fibonacci = new ArrayList<>(List.of(1., 1., 2.));
         this.maxStep = initMaxStep();
@@ -36,11 +36,11 @@ public class FibonacciMinimizer extends AbstractMinimizer {
 
     @Override
     protected boolean hasNext() {
-        return currentStep <= maxStep;
+        return segment.length() >= epsilon && currentStep <= maxStep;
     }
 
     @Override
-    protected Segment next(UnimodalFunction function) {
+    protected Segment next(final UnimodalFunction function) {
         ++currentStep;
         if (f1 <= f2) {
             segment = new Segment(segment.getFrom(), x2);
@@ -66,7 +66,7 @@ public class FibonacciMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected void reinitialize(UnimodalFunction function) {
+    protected void reinitialize(final UnimodalFunction function) {
         super.reinitialize(function);
 
         currentStep = 0;

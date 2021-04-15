@@ -18,32 +18,32 @@ public class BrentMinimizer extends AbstractMinimizer {
     private double length;
     private double prevLength;
 
-    public BrentMinimizer(Segment segment, double epsilon) {
+    public BrentMinimizer(final Segment segment, final double epsilon) {
         super(segment, epsilon);
     }
 
-    private boolean equal(double a, double b) {
+    private boolean equal(final double a, final double b) {
         return Math.abs(a - b) < epsilon;
     }
 
-    private boolean notEqual(double a, double b, double c) {
+    private boolean notEqual(final double a, final double b, final double c) {
         return !equal(a, b) && !equal(a, c) && !equal(b, c);
     }
 
     @Override
     protected boolean hasNext() {
-        double tolerance = epsilon * Math.abs(x) + epsilon / 10;
-        return Math.abs(x - (segment.getFrom() + segment.getTo()) / 2) + segment.length() / 2 > 2 * tolerance;
+        final double tolerance = epsilon * Math.abs(x) + epsilon / 10;
+        return Math.abs(x - (segment.getFrom() + segment.getTo()) / 2) + segment.length() / 2 >= 2 * tolerance;
     }
 
     @Override
-    protected Segment next(UnimodalFunction function) {
+    protected Segment next(final UnimodalFunction function) {
         boolean parabolaAccepted = false;
-        double tolerance = epsilon * Math.abs(x) + epsilon / 10;
+        final double tolerance = epsilon * Math.abs(x) + epsilon / 10;
         double u = x;
 
         if (notEqual(x, w, v) && notEqual(fx, fw, fv)) {
-            Parabola parabola = new Parabola(x, w, v, fx, fw, fv);
+            final Parabola parabola = new Parabola(x, w, v, fx, fw, fv);
             u = parabola.getXMin();
 
             if (segment.contains(u) && 2 * Math.abs(u - x) < prevLength) {
@@ -72,10 +72,10 @@ public class BrentMinimizer extends AbstractMinimizer {
         }
 
         length = Math.abs(u - x);
-        double fu = function.applyAsDouble(u);
+        final double fu = function.applyAsDouble(u);
 
-        if (fu <= fx) {
-            if (u >= x) {
+        if (fu < fx) {
+            if (u > x) {
                 segment = new Segment(x, segment.getTo());
             } else {
                 segment = new Segment(segment.getFrom(), x);
@@ -88,18 +88,18 @@ public class BrentMinimizer extends AbstractMinimizer {
             fw = fx;
             fx = fu;
         } else {
-            if (u >= x) {
+            if (u > x) {
                 segment = new Segment(segment.getFrom(), x);
             } else {
                 segment = new Segment(x, segment.getTo());
             }
 
-            if (fu <= fw || equal(w, x)) {
+            if (fu < fw || equal(w, x)) {
                 v = w;
                 w = u;
                 fv = fw;
                 fw = fu;
-            } else if (fu <= fv || equal(v, x) || equal(v, w)) {
+            } else if (fu < fv || equal(v, x) || equal(v, w)) {
                 v = u;
                 fv = fu;
             }
@@ -114,7 +114,7 @@ public class BrentMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected void reinitialize(UnimodalFunction function) {
+    protected void reinitialize(final UnimodalFunction function) {
         x = w = v = segment.getFrom() + K * segment.length();
         fx = fw = fv = function.applyAsDouble(x);
 

@@ -19,7 +19,7 @@ public class ParabolicMinimizer extends AbstractMinimizer {
     private double f2;
     private double f3;
 
-    public ParabolicMinimizer(Segment segment, double epsilon) {
+    public ParabolicMinimizer(final Segment segment, final double epsilon) {
         super(segment, epsilon);
     }
 
@@ -29,12 +29,12 @@ public class ParabolicMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected Segment next(UnimodalFunction function) {
-        Parabola parabola = new Parabola(segment.getFrom(), x2, segment.getTo(), f1, f2, f3);
+    protected Segment next(final UnimodalFunction function) {
+        final Parabola parabola = new Parabola(segment.getFrom(), x2, segment.getTo(), f1, f2, f3);
 
         prevX = x;
         x = parabola.getXMin();
-        double f = function.applyAsDouble(x);
+        final double f = function.applyAsDouble(x);
 
         if (f >= f2) {
             if (x < x2) {
@@ -64,7 +64,7 @@ public class ParabolicMinimizer extends AbstractMinimizer {
         return x;
     }
 
-    private boolean tryFindX2(UnimodalFunction function) {
+    private boolean tryFindX2(final UnimodalFunction function) {
         int tryNum = 0;
 
         do {
@@ -81,30 +81,21 @@ public class ParabolicMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected void reinitialize(UnimodalFunction function) {
+    protected void reinitialize(final UnimodalFunction function) {
         super.reinitialize(function);
 
         f1 = function.applyAsDouble(segment.getFrom());
         f3 = function.applyAsDouble(segment.getTo());
 
-        boolean found = tryFindX2(function);
+        final boolean found = tryFindX2(function);
 
         if (!found) {
-            System.err.println("Warning! The given result might be wrong.");
-
-            if (f1 < f3) {
-                x2 = segment.getFrom();
-                f3 = f2 = f1;
-                segment = new Segment(segment.getFrom(), segment.getFrom());
-            } else {
-                x2 = segment.getTo();
-                f1 = f2 = f3;
-                segment = new Segment(segment.getTo(), segment.getTo());
-            }
+            x = (f1 < f3 ? segment.getFrom() : segment.getTo());
+            prevX = x;
+        } else {
+            x = x2;
+            prevX = x + 2 * epsilon;
         }
-
-        x = x2;
-        prevX = x + 2 * epsilon;
     }
 
     @Override

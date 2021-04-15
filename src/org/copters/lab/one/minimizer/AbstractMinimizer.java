@@ -9,7 +9,7 @@ public abstract class AbstractMinimizer implements Minimizer {
 
     protected Segment segment;
 
-    protected AbstractMinimizer(Segment segment, double epsilon) {
+    protected AbstractMinimizer(final Segment segment, final double epsilon) {
         if (epsilon <= 0) {
             throw new IllegalArgumentException("Epsilon must be greater than 0");
         }
@@ -25,7 +25,7 @@ public abstract class AbstractMinimizer implements Minimizer {
     protected abstract double getXMin();
 
     @Override
-    public final double minimize(UnimodalFunction function) {
+    public final double minimize(final UnimodalFunction function) {
         reinitialize(function);
         while (hasNext()) {
             segment = next(function);
@@ -33,7 +33,7 @@ public abstract class AbstractMinimizer implements Minimizer {
         return getXMin();
     }
 
-    protected void reinitialize(UnimodalFunction function) {
+    protected void reinitialize(final UnimodalFunction function) {
         segment = initialSegment;
     }
 }
