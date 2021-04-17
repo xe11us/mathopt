@@ -1,6 +1,5 @@
 package org.copters.lab.two.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +42,19 @@ public class Matrix {
         return new Vector(rows().stream()
                 .map(row -> row.dot(vector))
                 .collect(Collectors.toList()));
+    }
+
+    public Matrix symmetrized() {
+        final Tuple<Integer, Integer> size = this.getDimensions();
+        final double[][] symmetric = new double[size.getFirst()][size.getSecond()];
+
+        for (int i = 0; i < size.getFirst(); ++i) {
+            for (int j = 0; j < size.getSecond(); ++j) {
+                symmetric[i][j] = this.get(i, j) + this.get(j, i);
+            }
+        }
+
+        return Matrix.of(symmetric);
     }
 
     public List<Vector> rows() {

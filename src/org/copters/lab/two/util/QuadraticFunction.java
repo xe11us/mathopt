@@ -8,21 +8,7 @@ public class QuadraticFunction implements ToDoubleFunction<Vector> {
     private final double c;
 
     public QuadraticFunction(final Matrix a, final Vector b, final double c) {
-
-        if (a instanceof DiagonalMatrix) {
-            this.a = a;
-        } else {
-            final Tuple<Integer, Integer> size = a.getDimensions();
-            final double[][] symmetric = new double[size.getFirst()][size.getSecond()];
-
-            for (int i = 0; i < size.getFirst(); ++i) {
-                for (int j = 0; j < size.getSecond(); ++j) {
-                    symmetric[i][j] = a.get(i, j) + a.get(j, i);
-                }
-            }
-
-            this.a = Matrix.of(symmetric);
-        }
+        this.a = a.symmetrized();
         this.b = b;
         this.c = c;
     }

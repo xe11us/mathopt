@@ -38,4 +38,9 @@ public class DiagonalMatrix extends Matrix {
     public Tuple<Integer, Integer> getDimensions() {
         return Tuple.of(diagonal.getDimension(), diagonal.getDimension());
     }
+
+    @Override
+    public Matrix symmetrized() {
+        return new DiagonalMatrix(diagonal.multiply(2.));
+    }
 }
