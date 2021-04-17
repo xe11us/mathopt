@@ -1,5 +1,6 @@
 package org.copters.lab.two.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +8,10 @@ import java.util.stream.Stream;
 
 public class Matrix {
     private final List<Vector> rows;
+
+    protected Matrix() {
+        this.rows = List.of();
+    }
 
     protected Matrix(final List<Vector> rows) {
         final int dimension = rows.get(0).getDimension();
