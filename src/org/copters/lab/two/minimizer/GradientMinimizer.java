@@ -4,12 +4,10 @@ import org.copters.lab.two.util.QuadraticFunction;
 import org.copters.lab.two.util.Tuple;
 import org.copters.lab.two.util.Vector;
 
-import javax.naming.LimitExceededException;
-
 public interface GradientMinimizer {
-    Tuple<Vector, Integer> minimize(QuadraticFunction function, double alpha) throws LimitExceededException;
+    Tuple<Vector, Integer> minimize(QuadraticFunction function, double alpha);
 
-    default Tuple<Vector, Integer> minimize(final QuadraticFunction function) throws LimitExceededException {
+    default Tuple<Vector, Integer> minimize(final QuadraticFunction function) {
         return minimize(function, 1.);
     }
 

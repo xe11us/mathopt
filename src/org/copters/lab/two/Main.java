@@ -11,7 +11,6 @@ import org.copters.lab.two.util.QuadraticFunction;
 import org.copters.lab.two.util.Tuple;
 import org.copters.lab.two.util.Vector;
 
-import javax.naming.LimitExceededException;
 import java.util.List;
 
 public class Main {
@@ -62,15 +61,10 @@ public class Main {
             fullname += " (" + steepestMinimizer.getSingleMinimizer().getRussianName() + ")";
         }
         System.out.println(fullname + ": ");
-        try {
-            final Tuple<Vector, Integer> result = minimizer.minimize(
-                    testCase.getFunction(), testCase.getAlpha());
-            System.out.println("\tКоличество итераций: " + result.getSecond());
-            System.out.println("\tРезультат: " + result.getFirst());
-        } catch (final LimitExceededException e) {
-            System.out.println("\tПревышено максимальное количество итераций");
-            e.printStackTrace();
-        }
+        final Tuple<Vector, Integer> result = minimizer.minimize(
+                testCase.getFunction(), testCase.getAlpha());
+        System.out.println("\tКоличество итераций: " + result.getSecond());
+        System.out.println("\tРезультат: " + result.getFirst());
     }
 
     public static void main(final String[] args) {
