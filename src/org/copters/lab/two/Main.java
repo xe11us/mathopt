@@ -32,25 +32,13 @@ public class Main {
             new TestCase(
                     new QuadraticFunction(
                             Matrix.of(
-                                    List.of(1., 2.),
-                                    List.of(0., 3.)),
-                            Vector.of(4, 5),
-                            6
+                                    List.of(4., 1.),
+                                    List.of(0., 2.)),
+                            Vector.of(1, 1),
+                            13
                     ),
-                    -2 * Math.sqrt(2) + 4,
-                    2 * Math.sqrt(2) + 4
-            ),
-
-            new TestCase(
-                    new QuadraticFunction(
-                            Matrix.of(
-                                    List.of(1., 0.),
-                                    List.of(0., 1.)),
-                            Vector.of(1, -1),
-                            228
-                    ),
-                    2,
-                    2
+                    6 - Math.sqrt(5),
+                    6 + Math.sqrt(5)
             )
     );
 
