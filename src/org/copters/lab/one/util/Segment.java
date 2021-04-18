@@ -4,7 +4,7 @@ public class Segment {
     private final double from;
     private final double to;
 
-    public Segment(double from, double to) {
+    public Segment(final double from, final double to) {
         if (to < from) {
             throw new IllegalArgumentException("Interval [from, to] must not be empty");
         }
@@ -20,7 +20,7 @@ public class Segment {
         return to;
     }
 
-    public boolean contains(double x) {
+    public boolean contains(final double x) {
         return from <= x && x <= to;
     }
 

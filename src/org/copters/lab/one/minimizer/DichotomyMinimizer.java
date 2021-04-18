@@ -6,7 +6,7 @@ import org.copters.lab.one.util.UnimodalFunction;
 public class DichotomyMinimizer extends AbstractMinimizer {
     private final double delta;
 
-    public DichotomyMinimizer(Segment segment, double epsilon, double delta) {
+    public DichotomyMinimizer(final Segment segment, final double epsilon, final double delta) {
         super(segment, epsilon);
         if (!(0 < delta && delta < 2 * epsilon)) {
             throw new IllegalArgumentException("Delta must be between 0 and 2 * epsilon");
@@ -14,7 +14,7 @@ public class DichotomyMinimizer extends AbstractMinimizer {
         this.delta = delta;
     }
 
-    public DichotomyMinimizer(Segment segment, double epsilon) {
+    public DichotomyMinimizer(final Segment segment, final double epsilon) {
         this(segment, epsilon, epsilon);
     }
 
@@ -24,9 +24,9 @@ public class DichotomyMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected Segment next(UnimodalFunction function) {
-        double x1 = (segment.getFrom() + segment.getTo() - delta) / 2;
-        double x2 = (segment.getFrom() + segment.getTo() + delta) / 2;
+    protected Segment next(final UnimodalFunction function) {
+        final double x1 = (segment.getFrom() + segment.getTo() - delta) / 2;
+        final double x2 = (segment.getFrom() + segment.getTo() + delta) / 2;
 
         if (function.applyAsDouble(x1) <= function.applyAsDouble(x2)) {
             segment = new Segment(segment.getFrom(), x2);

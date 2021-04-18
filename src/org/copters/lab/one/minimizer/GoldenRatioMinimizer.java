@@ -12,7 +12,7 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
     private double f1;
     private double f2;
 
-    public GoldenRatioMinimizer(Segment segment, double epsilon) {
+    public GoldenRatioMinimizer(final Segment segment, final double epsilon) {
         super(segment, epsilon);
     }
 
@@ -22,7 +22,7 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected Segment next(UnimodalFunction function) {
+    protected Segment next(final UnimodalFunction function) {
         if (f1 <= f2) {
             segment = new Segment(segment.getFrom(), x2);
             x2 = x1;
@@ -45,7 +45,7 @@ public class GoldenRatioMinimizer extends AbstractMinimizer {
     }
 
     @Override
-    protected void reinitialize(UnimodalFunction function) {
+    protected void reinitialize(final UnimodalFunction function) {
         super.reinitialize(function);
 
         x1 = segment.getTo() - TAU * segment.length();
