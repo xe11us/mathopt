@@ -20,11 +20,11 @@ public class DiagonalMatrix extends Matrix {
 
     @Override
     public Vector multiply(final Vector vector) {
-        if (vector.getDimension() != getDimensions().getSecond()) {
+        if (vector.size() != getDimensions().getSecond()) {
             throw new IllegalArgumentException("Cannot multiply matrix and vector of different size");
         }
 
-        return new Vector(IntStream.range(0, vector.getDimension())
+        return new Vector(IntStream.range(0, vector.size())
                 .mapToObj(index -> vector.get(index) * diagonal.get(index))
                 .collect(Collectors.toList()));
     }
@@ -36,7 +36,7 @@ public class DiagonalMatrix extends Matrix {
 
     @Override
     public Tuple<Integer, Integer> getDimensions() {
-        return Tuple.of(diagonal.getDimension(), diagonal.getDimension());
+        return Tuple.of(diagonal.size(), diagonal.size());
     }
 
     @Override

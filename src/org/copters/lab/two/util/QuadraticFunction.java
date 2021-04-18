@@ -19,7 +19,7 @@ public class QuadraticFunction implements ToDoubleFunction<Vector> {
     }
 
     public int getDimension() {
-        return b.getDimension();
+        return b.size();
     }
 
     public Vector getGradient(final Vector x) {

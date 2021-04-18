@@ -1,12 +1,12 @@
 package org.copters.lab.two.util;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class Vector {
+public class Vector extends AbstractList<Double> {
     private final List<Double> arguments;
 
     public Vector(final List<Double> arguments) {
@@ -29,7 +29,7 @@ public class Vector {
     }
 
     public Vector add(final Vector vector) {
-        if (getDimension() != vector.getDimension()) {
+        if (size() != vector.size()) {
             throw new IllegalArgumentException("Cannot sum vectors of different size");
         }
         return new Vector(IntStream.range(0, arguments.size())
@@ -45,10 +45,6 @@ public class Vector {
         return arguments.get(index);
     }
 
-    public int getDimension() {
-        return arguments.size();
-    }
-
     public double sqrLength() {
         return arguments.stream()
                 .mapToDouble(arg -> arg * arg)
@@ -60,7 +56,7 @@ public class Vector {
     }
 
     public double dot(final Vector vector) {
-        if (getDimension() != vector.getDimension()) {
+        if (size() != vector.size()) {
             throw new IllegalArgumentException("Cannot multiply vectors of different size");
         }
         return IntStream.range(0, arguments.size())
@@ -71,5 +67,30 @@ public class Vector {
     @Override
     public String toString() {
         return arguments.toString();
+    }
+
+    @Override
+    public Iterator<Double> iterator() {
+        return arguments.iterator();
+    }
+
+    @Override
+    public int size() {
+        return arguments.size();
+    }
+
+    @Override
+    public void forEach(final Consumer<? super Double> action) {
+        arguments.forEach(action);
+    }
+
+    @Override
+    public Spliterator<Double> spliterator() {
+        return arguments.spliterator();
+    }
+
+    @Override
+    public Stream<Double> stream() {
+        return arguments.stream();
     }
 }

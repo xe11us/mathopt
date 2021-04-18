@@ -13,9 +13,9 @@ public class Matrix {
     }
 
     protected Matrix(final List<Vector> rows) {
-        final int dimension = rows.get(0).getDimension();
+        final int dimension = rows.get(0).size();
         final Stream<Vector> stream = rows.stream();
-        if (stream.anyMatch(row -> row.getDimension() != dimension)) {
+        if (stream.anyMatch(row -> row.size() != dimension)) {
             throw new IllegalArgumentException("Cannot create matrix with different row sizes");
         }
 
@@ -36,7 +36,7 @@ public class Matrix {
     }
 
     public Vector multiply(final Vector vector) {
-        if (vector.getDimension() != getDimensions().getSecond()) {
+        if (vector.size() != getDimensions().getSecond()) {
             throw new IllegalArgumentException("Cannot multiply matrix and vector of different size");
         }
         return new Vector(rows().stream()
@@ -66,6 +66,6 @@ public class Matrix {
     }
 
     public Tuple<Integer, Integer> getDimensions() {
-        return Tuple.of(rows.size(), rows.get(0).getDimension());
+        return Tuple.of(rows.size(), rows.get(0).size());
     }
 }
