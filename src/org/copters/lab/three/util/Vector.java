@@ -1,6 +1,7 @@
 package org.copters.lab.three.util;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Vector {
@@ -25,6 +26,32 @@ public class Vector {
         return IntStream.range(0, values.length)
                 .mapToDouble(ind -> get(ind) * vector.get(ind))
                 .sum();
+    }
+
+    public Vector multiply(final double scale) {
+        return new Vector(Arrays.stream(values)
+                .map(arg ->  arg * scale)
+                .toArray());
+    }
+
+    public Vector add(final Vector vector) {
+        if (size() != vector.size()) {
+            throw new IllegalArgumentException("Cannot sum vectors of different size");
+        }
+
+        return new Vector(IntStream.range(0, values.length)
+                .mapToDouble(ind -> get(ind) + vector.get(ind))
+                .toArray());
+    }
+
+    public Vector subtract(final Vector vector) {
+        return add(vector.multiply(-1));
+    }
+
+    public double length() {
+        return Math.sqrt(Arrays.stream(values)
+                .map(arg -> arg * arg)
+                .sum());
     }
 
     public void set(final int index, final double value) {
