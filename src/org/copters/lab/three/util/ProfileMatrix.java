@@ -93,4 +93,19 @@ public class ProfileMatrix implements SquareMatrix {
     public int size() {
         return size;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder()
+                .append(size)
+                .append(System.lineSeparator())
+                .append(StreamUtils.join(ia, " "))
+                .append(System.lineSeparator())
+                .append(StreamUtils.join(lower, " "))
+                .append(System.lineSeparator())
+                .append(StreamUtils.join(upper, " "))
+                .append(System.lineSeparator())
+                .append(StreamUtils.join(diagonal, " "));
+        return sb.toString();
+    }
 }

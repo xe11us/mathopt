@@ -1,7 +1,6 @@
 package org.copters.lab.three.util;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Vector {
@@ -30,7 +29,7 @@ public class Vector {
 
     public Vector multiply(final double scale) {
         return new Vector(Arrays.stream(values)
-                .map(arg ->  arg * scale)
+                .map(arg -> arg * scale)
                 .toArray());
     }
 

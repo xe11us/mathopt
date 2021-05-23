@@ -1,6 +1,7 @@
 package org.copters.lab.three.util;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class DenseMatrix implements SquareMatrix {
     private final double[][] rows;
@@ -11,15 +12,6 @@ public class DenseMatrix implements SquareMatrix {
 
     public static DenseMatrix of(final double[]... rows) {
         return new DenseMatrix(rows);
-    }
-
-    public Vector multiply(final Vector vector) {
-        if (vector.size() != size()) {
-            throw new IllegalArgumentException("Cannot multiply matrix and vector of different size");
-        }
-        return new Vector(Arrays.stream(rows)
-                .mapToDouble(row -> new Vector(row).dot(vector))
-                .toArray());
     }
 
     public double get(final int i, final int j) {
@@ -34,5 +26,13 @@ public class DenseMatrix implements SquareMatrix {
     @Override
     public int size() {
         return rows.length;
+    }
+
+    @Override
+    public String toString() {
+        return size() + System.lineSeparator() +
+                Arrays.stream(rows)
+                        .map(row -> StreamUtils.join(row, " "))
+                        .collect(Collectors.joining(System.lineSeparator()));
     }
 }
