@@ -18,6 +18,12 @@ public class Vector {
         return new Vector(new double[n]);
     }
 
+    public static Vector unit(final int n, final int index) {
+        final Vector vector = Vector.ofZeros(n);
+        vector.set(index, 1);
+        return vector;
+    }
+
     public double dot(final Vector vector) {
         if (size() != vector.size()) {
             throw new IllegalArgumentException("Cannot multiply vectors of different size");
@@ -33,6 +39,16 @@ public class Vector {
                 .toArray());
     }
 
+    public SquareMatrix multiply(final Vector vector) {
+        return new DenseMatrix(Arrays.stream(values)
+                .mapToObj(arg -> vector.multiply(arg).toArray())
+                .toArray(double[][]::new));
+    }
+
+    public Vector negate() {
+        return multiply(-1);
+    }
+
     public Vector add(final Vector vector) {
         if (size() != vector.size()) {
             throw new IllegalArgumentException("Cannot sum vectors of different size");
@@ -44,7 +60,7 @@ public class Vector {
     }
 
     public Vector subtract(final Vector vector) {
-        return add(vector.multiply(-1));
+        return add(vector.negate());
     }
 
     public double length() {
@@ -68,5 +84,9 @@ public class Vector {
     @Override
     public String toString() {
         return Arrays.toString(values);
+    }
+
+    public double[] toArray() {
+        return values;
     }
 }
