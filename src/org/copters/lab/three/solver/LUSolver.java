@@ -6,15 +6,16 @@ import org.copters.lab.three.util.Vector;
 import java.util.stream.IntStream;
 
 public class LUSolver extends AbstractSolver {
+    private final GaussSolver gauss;
 
     public LUSolver(final double epsilon) {
         super(epsilon);
+        this.gauss = new GaussSolver(epsilon);
     }
 
     @Override
     public Vector solve(final SquareMatrix matrix, final Vector values) {
         decompose(matrix);
-        final GaussSolver gauss = new GaussSolver(epsilon);
         final Vector y = gauss.forwardSolve(matrix, values);
         return gauss.backwardSolve(matrix, y);
     }
